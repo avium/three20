@@ -76,6 +76,8 @@ static const CGFloat kUITextViewVerticalPadding = 6;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc {
+  _textField.delegate = nil;
+  _textView.delegate = nil;
   TT_RELEASE_SAFELY(_internal);
   TT_RELEASE_SAFELY(_textField);
   TT_RELEASE_SAFELY(_textView);
