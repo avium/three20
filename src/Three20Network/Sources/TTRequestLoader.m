@@ -117,12 +117,14 @@ static const NSInteger kLoadMaxRetries = 2;
     [self performSelector:@selector(deliverDataResponse:) withObject:URL afterDelay:0.1];
     return;
   }
-  TTNetworkRequestStarted();
-
-  TTURLRequest* request = _requests.count == 1 ? [_requests objectAtIndex:0] : nil;
-  NSURLRequest* URLRequest = [_queue createNSURLRequest:request URL:URL];
-
-  _connection = [[NSURLConnection alloc] initWithRequest:URLRequest delegate:self];
+  if (!self.isLoading) {
+      TTNetworkRequestStarted();
+    
+      TTURLRequest* request = [_requests lastObject];
+      NSURLRequest* URLRequest = [_queue createNSURLRequest:request URL:URL];
+    
+      _connection = [[NSURLConnection alloc] initWithRequest:URLRequest delegate:self];
+  }
 }
 
 
@@ -180,7 +182,7 @@ static const NSInteger kLoadMaxRetries = 2;
   // correctly, this would be the place to start tracing for errors.
   TTNetworkRequestStarted();
 
-  TTURLRequest* request = _requests.count == 1 ? [_requests objectAtIndex:0] : nil;
+  TTURLRequest* request = [_requests lastObject];
   NSURLRequest* URLRequest = [_queue createNSURLRequest:request URL:URL];
 
   NSHTTPURLResponse* response = nil;
